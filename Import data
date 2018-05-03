@@ -1,0 +1,21 @@
+import http.client
+import json
+import pandas as pd
+from pandas.io.json import json_normalize
+
+
+api_key = '2cf83b1b1b434787a3da533f9ce04d53'
+
+connection = http.client.HTTPConnection('api.football-data.org')
+headers = { 'X-Auth-Token': api_key , 'X-Response-Control': 'minified' }
+connection.request('GET', '/v1/competitions/464/fixtures', None, headers )
+response = json.loads(connection.getresponse().read().decode())
+
+#print(response)
+#df = pd.read_json(json.dumps(response['fixtures']) , typ='frame', orient='records')
+
+df = pd.io.json.json_normalize(response['fixtures' ])
+#df.columns = df.columns.map(lambda x: x.split(".")[-1])
+
+
+print(df)
